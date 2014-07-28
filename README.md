@@ -7,7 +7,19 @@ jQMultiTouch is a lightweight toolkit and development framework for multi-touch 
 The main ideas behind jQMultiTouch and its core features are described [in this paper](http://www.globis.ethz.ch/publications/?action=show_abstract&pubid=346) presented at the [EICS 2012](http://eics-conference.org/2012) conference.
 
 jQMulTouch is written and maintained by [Michael Nebeling](http://www.michael-nebeling.de).
-It is licensed under GPLv3 (GNU Public License), see file LICENSE.
+It is licensed under GPLv3 (GNU Public License), see the file LICENSE.
+
+
+**Note: Please cite the [EICS 2012 Paper](http://dl.acm.org/citation.cfm?id=2305497) if you are using jQMultiTouch in your academic projects.**
+
+## Features
+				
+* **Support for Firefox and WebKit Browsers**:  One of the core features of jQMultiTouch is that it supports Firefox and WebKit-based browsers such as Safari. As a result, cross-browser compatibilty issues between different touch event models and data are resolved and touch events can be handled in a uniform way independent of browser-specific implementations.
+* **Default Multi-Touch Gesture Handlers**:  jQMultiTouch provides support for custom touch and gesture handlers, but also offers default implementations to enable common dragging, scaling and rotation operations in supported browsers.
+* **Touch History Query and Evaluation Mechanisms**:  One of the core components of jQMultiTouch is the touch event buffer or history. The touch history keeps a record of current and previous touches, and can be filtered by all touch-related properties, e.g. touch id (i.e. finger), touch event, target element and timestamp. This is important for gestures that may involve several fingers, a series of touch down, move and up events as well as multiple target elements within a certain period of time.
+* **Gesture Templates**: To make working with the touch history easier for developers, jQMultiTouch provides several methods for querying and filtering the entries according to a combination of criteria. These can for example be used to detect simple swipe left/right gestures.
+* **Touch Support**: jQMultiTouch also provides a cross-browser compatible method to find out whether touch events are supported by the device and browser in use.
+* **Device Orientation**: In addition, jQMultiTouch provides a simple way of reacting to changes in the orientation of the device.
 
 ## Examples
 
@@ -21,15 +33,6 @@ It is licensed under GPLv3 (GNU Public License), see file LICENSE.
 * [Picture Viewing Application](examples/pictures.html): Simple picture viewing application that shows jQMultiTouch's support for attachable behaviours to support common dragging, scaling and rotation behaviours
 * [CNN Application](examples/cnn.html): Simple prototype of the CNN web site using jQMultiTouch gestures to play around with the interaction between screens
 
-## Features
-				
-* **Support for Firefox and WebKit Browsers**:  One of the core features of jQMultiTouch is that it supports Firefox and WebKit-based browsers such as Safari. As a result, cross-browser compatibilty issues between different touch event models and data are resolved and touch events can be handled in a uniform way independent of browser-specific implementations.
-* **Default Multi-Touch Gesture Handlers**:  jQMultiTouch provides support for custom touch and gesture handlers, but also offers default implementations to enable common dragging, scaling and rotation operations in supported browsers.
-* **Touch History Query and Evaluation Mechanisms**:  One of the core components of jQMultiTouch is the touch event buffer or history. The touch history keeps a record of current and previous touches, and can be filtered by all touch-related properties, e.g. touch id (i.e. finger), touch event, target element and timestamp. This is important for gestures that may involve several fingers, a series of touch down, move and up events as well as multiple target elements within a certain period of time.
-* **Gesture Templates**: To make working with the touch history easier for developers, jQMultiTouch provides several methods for querying and filtering the entries according to a combination of criteria. These can for example be used to detect simple swipe left/right gestures.
-* **Touch Support**: jQMultiTouch also provides a cross-browser compatible method to find out whether touch events are supported by the device and browser in use.
-* **Device Orientation**: In addition, jQMultiTouch provides a simple way of reacting to changes in the orientation of the device.
-
 ## FAQ
 
 **Q: What is jQMultiTouch?**
@@ -42,7 +45,7 @@ It is licensed under GPLv3 (GNU Public License), see file LICENSE.
 
 **Q: Can I use jQMultiTouch in my projects?**
 
-*A: Yes, please fork the GitHub repository and go ahead. jQMultiTouch has been released as open-source distributed under the Apache 2 Licence.*
+*A: Yes, please fork the GitHub repository and go ahead. jQMultiTouch has been released as open-source distributed under the GPLv3 (GNU Public License).*
 
 **Q: Why doesn't it work on my touch device?**
 
