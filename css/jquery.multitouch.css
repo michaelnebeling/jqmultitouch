@@ -1,0 +1,59 @@
+/*
+ * jQMultiTouch -- The jQuery of Multi-touch
+ * Copyright (C) 2010-2014 Michael Nebeling. All rights reserved.
+ *
+ * jQMultiTouch is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jQMultiTouch is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jQMultiTouch. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * See the README and LINCENSE files for further information.
+ *
+ */
+.touchable:-moz-system-metric(touch-enabled) {
+	-moz-user-select: none;
+	cursor: crosshair;
+}
+.touchable::-moz-selection {
+	background: none;
+}
+.touched {
+}
+
+.draggable {
+}
+.dragging {
+	z-index: 9999;
+}
+
+.scalable {
+}
+.scaling {
+}
+
+.resizable {
+}
+.resizing {
+}
+
+.rotatable {
+}
+.rotating {
+}
+
+.orientable {
+}
+.portrait {
+}
+.landscape {
+}
+.landscape-90 {
+}

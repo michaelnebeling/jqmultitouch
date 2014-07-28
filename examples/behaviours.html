@@ -1,0 +1,123 @@
+<!--
+/*
+ * jQMultiTouch -- The jQuery of Multi-touch
+ * Copyright (C) 2010-2014 Michael Nebeling. All rights reserved.
+ *
+ * jQMultiTouch is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jQMultiTouch is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jQMultiTouch. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * See the README and LINCENSE files for further information.
+ *
+ */
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+
+    <title>jQMultiTouch Attachable Behaviours</title>
+
+    <!-- include jQuery -->
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+
+    <!-- include jQMultiTouch -->
+    <script src="../js/jquery.multitouch.js" type="text/javascript"></script>
+    <link href="../css/jquery.multitouch.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        body {
+            border: 5px solid red;
+            font-family: Arial;
+            margin: 0;
+            padding: 10px;
+        }
+        .touchable {
+            border: 1px solid black;
+            width: 250px;
+            height: 250px;
+            text-align: center;
+        }
+        .touchable.touched {
+            border-width: 3px;
+        }
+        .draggable {
+            background: silver;
+        }
+        .scalable {
+            background: green;
+        }
+        .resizable {
+            border-color: green;
+        }
+        .rotatable {
+            border-radius: 15px;
+        }
+        .dragging,
+        .scaling,
+        .resizing,
+        .rotating {
+            opacity: 0.8;
+        }
+        /* orientable */
+        .portrait:before {
+            content: 'portrait';
+        }
+        .landscape:before {
+            content: 'landscape';
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orientable"></div>
+    <div class="touchable">touchable</div>
+    <div class="draggable">draggable</div>
+    <div class="draggable scalable">draggable scalable</div>
+    <div class="draggable resizable">draggable resizable</div>
+    <div class="draggable scalable resizable">draggable scalable resizable</div>
+    <div class="draggable rotatable">draggable rotatable</div>
+    <div class="draggable scalable rotatable">draggable scalable rotatable</div>
+    <div class="draggable resizable rotatable">draggable resizable rotatable</div>
+    <div class="draggable scalable resizable rotatable">draggable scalable resizable rotatable</div>
+
+    <script type="text/javascript">
+        $.touch.triggerMouseEvents = true; // enable mouse events
+
+        $.touch.ready(function () {
+            $('body').css('border', '5px solid green');
+
+            $('.touchable').touchable();
+
+            $('.draggable').draggable({
+                grid: [5, 5],
+                constrainParent: true,
+            });
+
+            $('.scalable').scalable({
+                minScale: 0.5,
+                maxScale: 1.5,
+            });
+
+            $('.resizable').resizable({
+                minWidth: 50,
+                maxWidth: 500,
+                minHeight: 50,
+                maxHeight: 500,
+            });
+        });
+    </script>
+</body>
+
+</html>

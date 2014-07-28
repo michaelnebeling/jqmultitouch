@@ -1,0 +1,263 @@
+<!--
+/*
+ * jQMultiTouch -- The jQuery of Multi-touch
+ * Copyright (C) 2010-2014 Michael Nebeling. All rights reserved.
+ *
+ * jQMultiTouch is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jQMultiTouch is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jQMultiTouch. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * See the README and LINCENSE files for further information.
+ *
+ */
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+
+    <title>jQMultiTouch CNN Application</title>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+    <script src="../js/jquery.multitouch.js"></script>
+    <link href="../css/jquery.multitouch.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: Arial;
+        }
+        body {
+            margin: 0;
+        }
+        .screen {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .screen-on-top {
+            z-index: 999;
+        }
+        #message {
+            color: red;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            z-index: 1000;
+        }
+    </style>
+    <script>
+        var screenWidth = screen.width;
+        var screenHeight = screen.height;
+
+        var screenReady = true;
+
+        function screen(screen, animation) {
+            var $current = $('.screen:visible');
+            var current = $current.attr('id');
+            if (screenReady && screen && screen != current) {
+                var $screen = $("#" + screen);
+                var effect = "show",
+                    options = {};
+                switch (animation) {
+                case "left-to-right":
+                    effect = 'slide';
+                    options = {
+                        direction: 'left',
+                        speed: 'slow'
+                    };
+                    break;
+                case "right-to-left":
+                    effect = 'slide';
+                    options = {
+                        direction: 'right',
+                        speed: 'slow'
+                    };
+                    break;
+                case "bottom-up":
+                    effect = 'slide';
+                    options = {
+                        direction: 'down',
+                        speed: 'slow'
+                    };
+                    break;
+                default:
+                    $current.hide();
+                    $screen.show();
+                }
+                screenReady = false;
+                $current.removeClass('screen-on-top');
+                $screen.addClass('screen-on-top').show(effect, options, function () {
+                    $current.hide();
+                    screenReady = true;
+                });
+            }
+            return current;
+        }
+    </script>
+</head>
+
+<body>
+    <!-- screens -->
+    <div class="screen" id="overview">
+        <img src="cnn_files/cnn-overview.png">
+    </div>
+
+    <div class="screen" id="home">
+        <img src="cnn_files/cnn-home.png">
+    </div>
+
+    <div class="screen" id="set-edition">
+        <img src="cnn_files/cnn-set-edition.png">
+    </div>
+
+    <div class="screen" id="video">
+        <img src="cnn_files/cnn-video.png">
+    </div>
+
+    <div class="screen" id="world">
+        <img src="cnn_files/cnn-world.png">
+    </div>
+
+    <script>
+        $.touch.triggerMouseEvents = true;
+
+        $.touch.ready(function () {
+            // hide all screens but home screen when application has started
+            $('.screen').not('#home').hide();
+        });
+
+        $.touch.orientationChanged(function () {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+
+            // prepare screen images
+            $('.screen img').each(function () {
+                // TODO you could also load a different set of images here, e.g. for landscape mode
+
+                // adapt screen images to full width
+                $(this).width(screenWidth);
+            });
+
+            // scroll to the top of the screen
+            setTimeout(scrollTo, 0, 0, 1);
+        });
+
+        $(document).touchable({
+            gesture: function (e, touchHistory) {
+                var touches = $(this).touches();
+                if (touches.length > 1) {
+                    // first filter the touch history down to the appropriate events
+                    var th = touchHistory.stop({
+                        type: ['touchdown', 'touchup']
+                    }).filter({
+                        type: 'touchmove',
+                        time: '1..100'
+                    });
+                    // then try to match it
+                    if (th.match([{
+                        touch: touches[0],
+                        deltaY: '<-100'
+                    }, {
+                        touch: touches[1],
+                        deltaY: '<-100'
+                    }])) {
+                        message('two swipe up');
+
+                        screen("home", "bottom-up");
+                    }
+                } else {
+                    // first filter the touch history down to the appropriate events
+                    var th = touchHistory.stop({
+                        type: ['touchdown', 'touchup']
+                    }).filter({
+                        touch: touchHistory.get(0).touch,
+                        type: 'touchmove',
+                        time: '1..100'
+                    });
+                    // then try to match it
+                    if (th.match({
+                        deltaX: '<-100'
+                    })) {
+                        message('swipe left');
+
+                        switch (screen()) {
+                        case "overview":
+                            screen("home", "right-to-left");
+                            break;
+                        case "home":
+                            screen("video", "right-to-left");
+                            break;
+                        case "video":
+                            screen("world", "right-to-left");
+                            break;
+                        }
+                    } else if (th.match({
+                        deltaX: '>100'
+                    })) {
+                        message('swipe right');
+
+                        switch (screen()) {
+                        case "home":
+                            screen("overview", "left-to-right");
+                            break;
+                        case "video":
+                            screen("home", "left-to-right");
+                            break;
+                        case "world":
+                            screen("video", "left-to-right");
+                            break;
+                        }
+                    } else if (th.match({
+                        deltaY: '>100'
+                    })) {
+                        message('swipe down');
+
+                        switch (screen()) {
+                        case "home":
+                            screen("set-edition");
+                            break;
+                        case "article":
+                            screen("article-video");
+                            break;
+                        }
+                    } else if (th.match({
+                        deltaY: '<-100'
+                    })) {
+                        message('swipe up');
+
+                        switch (screen()) {
+                        case "set-edition":
+                            screen("home");
+                            break;
+                        case "article-video":
+                            screen("article");
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <div id="message"></div>
+    <script>
+        function message(s) {
+            $('<div></div>').text(s).appendTo('#message').fadeOut(2000);
+        }
+    </script>
+
+</body>
+
+</html>

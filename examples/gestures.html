@@ -1,0 +1,167 @@
+<!--
+/*
+ * jQMultiTouch -- The jQuery of Multi-touch
+ * Copyright (C) 2010-2014 Michael Nebeling. All rights reserved.
+ *
+ * jQMultiTouch is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jQMultiTouch is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jQMultiTouch. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * See the README and LINCENSE files for further information.
+ *
+ */
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+
+    <title>jQMultiTouch Gestures Demo</title>
+
+    <!-- include jQuery -->
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+
+    <!-- include jQMultiTouch -->
+    <script src="../js/jquery.multitouch.js" type="text/javascript"></script>
+    <link href="../css/jquery.multitouch.css" rel="stylesheet" type="text/css">
+
+    <style>
+        * {
+            font-family: Arial;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #canvas {
+            background: silver;
+        }
+        #message {
+            color: red;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="message"></div>
+
+    <canvas id="canvas" width="1024" height="1024"></canvas>
+
+    <script>
+        $.touch.triggerMouseEvents = true;
+
+        $.touch.ready(function () {
+            $('#canvas').touchable({
+                gesture: function (e, touchHistory) {
+                    // simple gesture handler
+                    if (touchHistory.match({
+                        finger: 0,
+                        deltaX: '<-100',
+                        time: '1..100'
+                    })) {
+                        message('simpleSwipeLeftHandler');
+                    }
+
+                    // more advanced touch handler
+                    var touches = $(this).touches();
+                    if (touches.length > 1) {
+                        var th = touchHistory.stop({
+                            type: ['touchdown', 'touchup']
+                        }).filter({
+                            type: 'touchmove',
+                            time: '1..100'
+                        });
+                        if (th.match([{
+                            touch: touches[0],
+                            deltaX: '>100'
+                        }, {
+                            touch: touches[1],
+                            deltaX: '>100'
+                        }])) {
+                            message('two swipe right');
+                        }
+                    } else {
+                        var th = touchHistory;
+                        console.log(th.size());
+                        th = th.stop({
+                            type: ['touchdown', 'touchup']
+                        });
+                        console.log(th.size());
+                        th = th.filter({
+                            //touch: touchHistory.get(0).touch,
+                            type: 'touchmove',
+                            time: '1..100'
+                        });
+                        console.log(th.size());
+                        if (th.match({
+                            deltaX: '<-100'
+                        })) {
+                            message('swipe left');
+                        } else if (th.match({
+                            deltaX: '>100'
+                        })) {
+                            message('swipe right');
+                        } else if (th.match({
+                            deltaY: '>100'
+                        })) {
+                            message('swipe down');
+                        } else if (th.match({
+                            deltaY: '<-100'
+                        })) {
+                            message('swipe up');
+                        }
+                    }
+                },
+                touchMove: function (e, touchHistory) {
+                    // draw gesture strokes on the canvas
+                    var ctx = this.getContext('2d');
+                    ctx.beginPath();
+                    ctx.moveTo(touchHistory.get(0).clientX, touchHistory.get(0).clientY);
+                    ctx.lineTo(e.clientX, e.clientY);
+                    ctx.lineCap = "round";
+                    ctx.lineWidth = 10;
+                    ctx.stroke();
+                },
+                touchUp: function (e, touchHistory) {
+                    // clear canvas
+                    var ctx = this.getContext('2d');
+                    ctx.fillStyle = 'silver';
+                    ctx.fillRect(0, 0, this.width, this.height);
+                    //$.touch.history.empty(); // clear touch history
+                },
+            });
+
+            function message(s) {
+                $('<div></div>').text(s).appendTo('#message').fadeOut(2000);
+            }
+        });
+
+
+        $.touch.orientationChanged(function () {
+            var width = $(window).width(),
+                height = $(window).height();
+            $('#canvas').attr({
+                width: width,
+                height: height,
+            });
+        });
+    </script>
+</body>
+
+</html>
