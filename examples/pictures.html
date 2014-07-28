@@ -34,6 +34,9 @@
 
     <!-- include jQMultiTouch -->
     <script src="../js/jquery.multitouch.js" type="text/javascript"></script>
+    <script src="../js/jquery.multitouch-draggable.js" type="text/javascript"></script>
+    <script src="../js/jquery.multitouch-scalable.js" type="text/javascript"></script>
+    <script src="../js/jquery.multitouch-rotatable.js" type="text/javascript"></script>
     <link href="../css/jquery.multitouch.css" rel="stylesheet" type="text/css">
 
     <style>
@@ -44,6 +47,9 @@
             width: 1920px;
             height: 1080px;
             overflow: hidden;
+        }
+        img {
+            position: absolute
         }
         .touched {
             outline: 1px solid highlight;
@@ -70,6 +76,9 @@
         $.touch.triggerMouseEvents = true;
 
         $.touch.ready(function () {
+            var maxwidth = $(window).width(),
+                maxheight = $(window).height();
+
             $('img')
                 .draggable()
                 .scalable({

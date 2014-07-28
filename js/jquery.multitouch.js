@@ -493,17 +493,6 @@
 		$('<script></script>', { type: 'text/javascript', src: src }).appendTo('head');
 	}
 
-	// path to jQMultiTouch
-	var path = 'http://dev.globis.ethz.ch/jqmultitouch/1.0';
-
-	// load attachable behaviours
-	include(path + '/js/jquery.multitouch-gestures.js');	// include default gestures
-	include(path + '/js/jquery.multitouch-draggable.js');	// include draggable behaviour
-	include(path + '/js/jquery.multitouch-scalable.js');	// include scalable behaviour
-	include(path + '/js/jquery.multitouch-resizable.js');	// include resizable behaviour
-	include(path + '/js/jquery.multitouch-rotatable.js');	// include rotatable behaviour
-	include(path + '/js/jquery.multitouch-orientable.js');// include orientable behaviour
-
 	// init jQMultiTouch
 	$(function() {
 		if ($.touch.enabled() || $.touch.triggerMouseEvents) {
