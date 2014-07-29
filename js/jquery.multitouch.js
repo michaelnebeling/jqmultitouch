@@ -149,7 +149,7 @@
 	// extend jQuery object with touch environment
 	var old = $.touch;
 	$.touch = {
-		/** allTouches keeps a record of all allTouches touches */
+		/** allTouches keeps a record of all all touches */
 		allTouches: {},
 		/** enabled can be used to check whether touch is available on the device */
 		enabled: function() {
