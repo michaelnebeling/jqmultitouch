@@ -159,7 +159,7 @@ $.touch.rotatable: {
 }
 ```
 
-#### Orientatable Behaviour
+#### Orientable Behaviour
 
 In addition, jQMultiTouch implements the [Orientable Behaviour](js/jquery.multitouch-orientable.js) a simple way to react to changes in orientation.
 
