@@ -6,9 +6,8 @@ jQMultiTouch is a lightweight toolkit and development framework for multi-touch 
 			
 The main ideas behind jQMultiTouch and its core features are described [in this paper](http://www.globis.ethz.ch/publications/?action=show_abstract&pubid=346) presented at the [EICS 2012](http://eics-conference.org/2012) conference.
 
-jQMulTouch is written and maintained by [Michael Nebeling](http://www.michael-nebeling.de).
+jQMultiTouch is written and maintained by [Michael Nebeling](http://www.michael-nebeling.de).
 It is licensed under GPLv3 (GNU Public License), see the file LICENSE.
-
 
 **Note: Please cite the [EICS 2012 Paper](http://dl.acm.org/citation.cfm?id=2305497) if you are using jQMultiTouch in your academic projects.**
 
@@ -45,14 +44,14 @@ It is licensed under GPLv3 (GNU Public License), see the file LICENSE.
 
 **Q: Can I use jQMultiTouch in my projects?**
 
-*A: Yes, please fork the GitHub repository and go ahead. jQMultiTouch has been released as open-source distributed under the GPLv3 (GNU Public License).*
+*A: Yes, please fork the [GitHub repository](https://github.com/michaelnebeling/jqmultitouch) and go ahead. jQMultiTouch has been released as free open-source software distributed under the GPLv3 (GNU Public License).*
 
 **Q: Why doesn't it work on my touch device?**
 
 *A: We know that compatibility with some devices is still a problem (e.g. Windows Phone and Windows 8 touch devices are not yet supported), and are working on fixing the issues.*
 
 ## About
-				
-jQMultiTouch was originally developed and is currently maintained by [Michael Nebeling](http://www.michael-nebeling.de). It also contains contributions from Saiganesh Swaminathan, Maximilian Speicher, Martin Grubinger, Maria Husmann and Yassin Hassan.
+
+jQMultiTouch was originally created by [Michael Nebeling](http://www.michael-nebeling.de) in the [Global Information Systems Group](http://www.globis.ethz.ch) at ETH Zurich. It also contains contributions from Saiganesh Swaminathan, Maximilian Speicher, Martin Grubinger, Maria Husmann and Yassin Hassan. It is available as free open-source software distributed under the GPLv3 license.
 
 Should you have any questions or comments, please feel free to [send an email to Michael Nebeling](mailto:michael.nebeling@gmail.com).
