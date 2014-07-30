@@ -1,0 +1,81 @@
+<!--
+/*
+ * jQMultiTouch -- The jQuery of Multi-touch
+ * Copyright (C) 2010-2014 Michael Nebeling. All rights reserved.
+ *
+ * jQMultiTouch is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jQMultiTouch is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jQMultiTouch. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * See the README and LINCENSE files for further information.
+ *
+ */
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+
+    <title>jQMultiTouch Scrollable Demo</title>
+
+    <!-- include jQuery -->
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+
+    <!-- include jQMultiTouch -->
+    <script src="../js/jquery.multitouch.js" type="text/javascript"></script>
+
+    <link href="../css/jquery.multitouch.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        .scrollable {
+            background: white;
+            height: 200px;
+            width: 200px;
+            overflow-y: scroll;
+        }
+    </style>
+
+    <script type="text/javascript">
+        // globally disable default browser behaviour
+        $.touch.preventDefault = true;
+
+        // enable default browser behaviour for scrollable elements
+        $.touch.ready(function () {
+            $('.scrollable').touchable({
+                preventDefault: false
+            });
+        });
+    </script>
+</head>
+
+<body style="background: silver">
+    <p>This example shows how default browser behaviour can be controlled. The following scrollable div element stops the global prevention of default browser behaviour.</p>
+
+    <div class="scrollable">
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et mauris suscipit, mattis magna fermentum, blandit turpis. Sed eleifend eget tellus sit amet imperdiet. Nulla dignissim porta tortor, et scelerisque lectus vehicula ultrices. Nullam condimentum euismod quam, eget tristique mi molestie non. Nulla lobortis nec felis quis vestibulum. Sed nec lacus ac nibh consectetur varius. Duis at leo nunc. Phasellus arcu arcu, vestibulum ac lobortis nec, varius ut neque. Praesent vel consequat felis, sed ornare sem. In commodo at urna ac iaculis.</p>
+
+        <p>Donec mattis varius libero, non scelerisque eros commodo sit amet. Suspendisse potenti. Nunc elementum tincidunt euismod. Proin ut interdum lacus. Nullam elit orci, mollis id lacinia et, blandit a sapien. Phasellus id semper tortor. Duis posuere ante velit, in eleifend lectus porttitor eget. Etiam elit nunc, placerat eu urna a, gravida cursus erat. Donec ultricies nisi at justo venenatis, et facilisis nulla iaculis. Praesent mollis vel risus nec venenatis. Vivamus a neque nisi. Morbi neque nibh, lacinia non tempor vitae, porta in felis. Etiam sollicitudin ac urna non fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
+
+        <p>Nullam sed vehicula justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas quis sodales quam, vitae facilisis lacus. Donec euismod purus nec magna varius, vel vestibulum eros adipiscing. Cras ut elementum lacus, quis sagittis velit. Ut sit amet velit sed quam auctor interdum eu tempor magna. Aenean ac arcu vestibulum, gravida dolor vel, egestas velit. Nunc a dui in est convallis tincidunt eget quis urna.</p>
+
+        <p>Phasellus euismod augue eu placerat hendrerit. Quisque elementum erat id lobortis interdum. Integer mollis sodales gravida. Phasellus dapibus, ligula sit amet mollis condimentum, felis dolor tristique orci, vel vehicula sem massa sed felis. Suspendisse lorem augue, placerat sed commodo a, commodo quis magna. Aliquam erat volutpat. Vestibulum placerat libero sapien, iaculis cursus lectus volutpat vitae. Praesent diam nunc, bibendum non metus non, iaculis convallis nulla. Phasellus auctor pharetra purus in posuere. Sed volutpat luctus ligula, eget dictum velit accumsan ut. Suspendisse laoreet velit eget mauris bibendum sollicitudin. Aenean posuere vulputate eleifend. Integer a pharetra leo. Aliquam varius augue lacus, et dignissim ipsum tincidunt ac.</p>
+
+        <p>Pellentesque sed gravida urna, vel convallis orci. Phasellus sagittis elementum pellentesque. Donec vel velit ac ipsum sodales viverra sit amet ut risus. Aliquam quis tortor et velit sollicitudin dignissim ac nec ligula. In tincidunt feugiat consectetur. Integer nulla est, vehicula nec ipsum eu, sodales fermentum elit. In ac arcu vulputate, posuere elit sit amet, cursus nibh. Donec vitae neque dolor.</p>
+
+        <p>Ut ut imperdiet magna. Pellentesque egestas auctor sem, interdum tincidunt purus feugiat a. In sed pulvinar metus. Fusce placerat eros tortor, eget sagittis eros fermentum non. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc nisi libero, convallis at enim id, semper rhoncus erat. Praesent at vulputate ipsum. Vestibulum viverra, lorem quis mollis imperdiet, sapien elit suscipit purus, eget vehicula felis libero at felis. Quisque non placerat nibh. Duis tortor diam, pretium nec odio vel, commodo convallis mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+    </div>
+</body>
+
+</html>

@@ -48,7 +48,7 @@ jQMultiTouch requires jQuery (compatible with versions 1.6.4 or higher) and the 
 
 jQMultiTouch's core defines the `$.touch` environment and with it the following features and options:
 
-* `$.touch.preventDefault: boolean = true`: Can be set to control default browser behaviour (default is `true`, i.e. to prevent default behaviour)
+* `$.touch.preventDefault: boolean = true`: Can be set to globally control default browser behaviour (default is `true`, i.e. to prevent default behaviour)
 
 * `$.touch.triggerMouseEvents: boolean = false`: Can be set to simulate touch events, e.g. for legacy support and testing on non-touch devices (default is `false`, i.e. to only react to touch events)
 
@@ -56,7 +56,7 @@ jQMultiTouch's core defines the `$.touch` environment and with it the following 
 
 * `$.touch.ready(function): boolean`: Can be called to register a function that will be executed when the DOM is ready, provided that touch is available (see `$.touch.enabled()`) or `$.touch.triggerMouseEvents` is set to `true`
 
-* `$.fn.touches: array`: Returns all touches for the element, e.g.
+* `$.fn.touches: array of touch`: Returns all touches for the element, e.g.
 ```javascript
 if ($(element).touches().length > 1) {
     // more than one finger is touching the element
@@ -66,7 +66,7 @@ if ($(element).touches().length > 1) {
 Note that a touch object `touch` is defined as follows:
 
 ```javascript
-var touch = {
+touch = {
     // unique identifier for touch point
     id: int,
     // x position of touch point within document
@@ -82,8 +82,8 @@ var touch = {
 ```javascript
 $.each($.touch.allTouches, function() {
     // log all elements that are currently being touched
-    console.log(this.target);
-});
+    console.log(this.target)
+})
 ```
 
 * `$.touch.history: TouchHistory`: Maintains the global touch event buffer or history
@@ -107,7 +107,7 @@ The `TouchHistory` object defines the following functions:
 Note that a touch event `touchEvent` is defined as follows:
 
 ```javascript
-var touchEvent = {
+touchEvent = {
     // touch object that triggered the event
     touch: touch,
     // target element of touch event
@@ -145,10 +145,10 @@ var touchEvent = {
 
 * `query(select): TouchHistory`: Can be called to constrain the history according to a set of templates for segmentation, filter and match functions, where `select` defines the following properties:
 
-    * `select.start: template = null`
-    * `select.stop: template = null`
-    * `select.filter: template = null`
-    * `select.match: template = null`
+    * `select.start: template = undefined`
+    * `select.stop: template = undefined`
+    * `select.filter: template = undefined`
+    * `select.match: template = undefined`
 
 * `each(function): TouchHistory`: Can be called to iterate over the history calling `function(touchEvent)` for each touch event.
 
@@ -178,7 +178,7 @@ Below you can find an example taken from the [Picture Viewing Application](examp
 $(img)
   .draggable()
   .scalable({ minScale: 0.5, maxScale: 1.5 })
-  .rotatable();
+  .rotatable()
 ```
 
 #### Touchable Behaviour
@@ -187,6 +187,8 @@ The `touchable` behaviour and its defaults are defined as follows:
 
 ```javascript
 $.touch.touchable = {
+    // locally enable/disable default browser behaviour
+    preventDefault: boolean = true,
     // callback when a new touch is registered, return false to cancel default handler
     touchDown: function(touchEvent, touchHistory): boolean = function() { return true },
     // callback when touch is moving, return false to cancel default handler
@@ -232,7 +234,7 @@ $.touch.draggable: {
 The `scalable` behaviour and its defaults are defined as follows:
 
 ```javascript
-$.touch.scalable: {
+$.touch.scalable = {
     minScale: int = false,
     maxScale: int = false,
     scaleBefore: function(touchEvent): boolean = function() { return true },
@@ -247,7 +249,7 @@ $.touch.scalable: {
 The `resizable` behaviour and its defaults are defined as follows:
 
 ```javascript
-$.touch.resizable: {
+$.touch.resizable = {
     minWidth: int = false,
     maxWidth: int = false,
     minHeight: int = false,
@@ -264,8 +266,9 @@ $.touch.resizable: {
 The `rotatable` behaviour and its defaults are defined as follows:
 
 ```javascript
-$.touch.rotatable: {
-    step: int = 1, // TODO: not implemented yet
+$.touch.rotatable = {
+    // rotation steps in degrees, currently ignored
+    step: int = 1,
     rotateBefore: function(touchEvent): boolean = function() { return true },
     rotateDuring: function(touchEvent): boolean = function() { return true },
     rotateAfter: function(touchEvent): boolean = function() { return true },
@@ -273,25 +276,25 @@ $.touch.rotatable: {
 }
 ```
 
-#### Orientation
+#### Orientable Behaviour
 
 In addition, jQMultiTouch implements the [Orientable Behaviour](js/jquery.multitouch-orientable.js) as a simple way to react to changes in device orientation (or window portrait/landscape mode).
 
-The orientable behaviour and its defaults are defined as follows:
+The `orientable` behaviour is implemented based on two functions extending jQMultiTouch's core:
 
-* `$.touch.orientationChanged(function)`: Can be called to register a new orientation change handler, e.g.
+* `$.touch.orientationChanged(function (orientation))`: Can be called to register a new orientation change handler, e.g.
 
     ```javascript
     $.touch.orientationChanged(function (orientation) {
         if (Math.abs(orientation) === 90) {
-            alert('landscape');
+            alert('landscape')
         } else if (orientation === 0) {
-            alert('portrait');
+            alert('portrait')
         }
-    });
+    })
     ```
 
-* `$.touch.orientationHandler: function`: The default orientation handler, override for custom orientation behaviour
+* `$.touch.orientationHandler: function()`: The default orientation handler, override for custom orientation behaviour
 
 The default handler will automatically show/hide `orientable` elements marked with the following classes according to the orientation.
 
@@ -306,14 +309,17 @@ See the [Orientation Demo](examples/orientation.html) for an example.
 ```javascript
 $.touch.ready(function() {
   $(element).touchable({
-    gesture: function(e, th) { // custom gesture handler
-      th.start({ type: 'touchup' }).stop({ type: 'touchdown' }); // segment touch history
-      if (th.filter({ finger: 0, time: '<100' }).match({ deltaX: '<-100' })) { // constrain touch history
+    // custom gesture handler
+    gesture: function(e, th) {
+      // segment touch history
+      th.start({ type: 'touchup' }).stop({ type: 'touchdown' })
+      // constrain touch history
+      if (th.filter({ finger: 0, time: '<100' }).match({ deltaX: '<-100' })) {
         // swipe left detected
       }
     }
-  });
-});
+  })
+})
 ```
 
 See the [Gestures Demo](examples/gestures.html) for an example.
@@ -322,13 +328,13 @@ See the [Gestures Demo](examples/gestures.html) for an example.
 
 **The following applications are simple examples that demonstrate the general use of the framework. They have been designed to illustrate the basic concepts of the framework and how they could be applied in applications.**
 
-* [Behaviours Demo](examples/behaviours.html): Simple demonstrator of jQMultiTouch's core and attachable multi-touch behaviours
-* [Orienation Demo](examples/orientation.html): Shows jQMultiTouch's support for handling device orientation
-* [Gestures Demo](examples/gestures.html): Shows jQMultiTouch's support for custom multi-touch gestures
+* [Behaviours Demo](examples/behaviours.html): Shows jQMultiTouch's core `touchable` and attachable `draggable`, `scalable`, `resizable` and `rotatable` behaviours
+* [Orienation Demo](examples/orientation.html): Shows jQMultiTouch's `orientable` behaviour
+* [Gestures Demo](examples/gestures.html): Shows jQMultiTouch's custom `gesture`, `touchDown` and `touchUp` events of the `touchable` behaviour
 * [$1 Demo](examples/dollar.html): Demonstrates the integration with [$1 Unistroke Recognizer](http://depts.washington.edu/aimgroup/proj/dollar) and jQMultiTouch for stroke-based gesture recognition
-* [Simple Line Drawing Application](examples/draw.html): Simple application for drawing on a HTML5 canvas using one or more fingers, shows custom and browser-specific touch event handlers
-* [Picture Viewing Application](examples/pictures.html): Simple picture viewing application that shows jQMultiTouch's support for attachable behaviours for dragging, scaling and rotating elements
-* [CNN Application](examples/cnn.html): Simple prototype of the CNN web site using simple swipe gestures to play around with the transition between screens
+* [Simple Line Drawing Application](examples/draw.html): Simple application for drawing on a HTML5 canvas using one or more fingers, shows custom touch event handlers
+* [Picture Viewing Application](examples/pictures.html): Simple picture viewing application, shows jQMultiTouch's support for attachable behaviours for dragging, scaling and rotating elements
+* [CNN Application](examples/cnn.html): Simple CNN news application, shows custom swipe gestures to play around with the transition between screens
 
 ## FAQ
 
