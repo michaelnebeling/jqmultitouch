@@ -6,7 +6,7 @@ jQMultiTouch
 jQMultiTouch is a lightweight toolkit and development framework for multi-touch web interface development. Not only is it similar to jQuery in terms of the idea of providing a lightweight and general framework, but also because of the fact that it adopts many key ideas from jQuery and applies them to the framework's core concepts.
 			The main ideas behind jQMultiTouch and its core features are described [in this paper](http://www.globis.ethz.ch/publications/?action=show_abstract&pubid=346) presented at the [EICS 2012](http://eics-conference.org/2012) conference.
 
-jQMetrics was originally created by in the [Global Information Systems Group](http://www.globis.ethz.ch) at ETH Zurich. It is written and maintained by [Michael Nebeling](http://www.michael-nebeling.de). It is available as free open-source software distributed under the GPLv3 license. See the file LICENSE for more information.
+jQMultiTouch was originally created in the [Global Information Systems Group](http://www.globis.ethz.ch) at ETH Zurich. It is written and maintained by [Michael Nebeling](http://www.michael-nebeling.de). It also contains contributions from Saiganesh Swaminathan, Maximilian Speicher, Martin Grubinger, Maria Husmann and Yassin Hassan. It is available as free open-source software distributed under the GPLv3 license. See the file [LICENSE](LICENSE) for more information.
 
 Should you have any questions or comments, please feel free to [send an email to Michael Nebeling](mailto:michael.nebeling@gmail.com).
 
@@ -42,7 +42,117 @@ jQMultiTouch needs to be included using the following statements:
 <link href="../css/jquery.multitouch.css" rel="stylesheet" type="text/css">
 ```
 
-jQMultiTouch requires jQuery (compatible with versions 1.4.2 or higher) and the core (`js/jquery.multitouch.js`) to be included in the document. The attachable behaviours and the stylesheet are optional.
+jQMultiTouch requires jQuery (compatible with versions 1.6.4 or higher) and the core (`js/jquery.multitouch.js`) to be included in the document. The attachable behaviours and the stylesheet are optional.
+
+### `$.touch` Environment
+
+jQMultiTouch's core defines the `$.touch` environment and with it the following features and options:
+
+* `$.touch.preventDefault: boolean = true`: Can be set to control default browser behaviour (default is `true`, i.e. to prevent default behaviour)
+
+* `$.touch.triggerMouseEvents: boolean = false`: Can be set to simulate touch events, e.g. for legacy support and testing on non-touch devices (default is `false`, i.e. to only react to touch events)
+
+* `$.touch.enabled(): boolean`: Can be called to check whether touch is available on the device (returns `true`) or not (returns `false`)
+
+* `$.touch.ready(function): boolean`: Can be called to register a function that will be executed when the DOM is ready, provided that touch is available (see `$.touch.enabled()`) or `$.touch.triggerMouseEvents` is set to `true`
+
+* `$.fn.touches: array`: Returns all touches for the element, e.g.
+```javascript
+if ($(element).touches().length > 1) {
+    // more than one finger is touching the element
+}
+```
+
+Note that a touch object `touch` is defined as follows:
+
+```javascript
+var touch = {
+    // unique identifier for touch point
+    id: int,
+    // x position of touch point within document
+    clientX: int,
+    // y position of touch point within document
+    clientY: int,
+    // elementFromPoint(touch.clientX, touch.clientY)
+    target: documentElement,
+}
+```
+
+* `$.touch.allTouches: object`: Can be read to access all globally active touches (independent of their target elements), e.g.
+```javascript
+$.each($.touch.allTouches, function() {
+    // log all elements that are currently being touched
+    console.log(this.target);
+});
+```
+
+Note that a touch event `touchEvent` is defined as follows:
+
+```javascript
+var touchEvent = {
+    // touch object that triggered the event
+    touch: touchObject,
+    // target element of touch event
+    target: documentElement,
+    // x position of touch point within document
+    clientX: int,
+    // y position of touch point within document
+    clientY: int,
+    // type of touch event
+    type: touchdown|touchmove|touchup|gesture,
+    // timestamp when event was triggered
+    time: $.now(),
+}
+```
+
+* `$.touch.history: TouchHistory`: Maintains the global touch event buffer or history
+
+* `$.touch.historyMaxSize: int = 64`: Sets the maximum size of the touch event buffer (default is 64)
+
+* `$.touch.historyFilterPredicates: object`: Defines the predicates that can be used in `TouchHistory.filter()` and `TouchHistory.find()`, e.g. `type`, `target`, `touch`, `finger` and `time`
+
+* `$.touch.historyMatchPredicates: object`: Defines the predicates that can be used in `TouchHistory.match()`, e.g. `clientX`, `clientY`, `deltaX`, `deltaY`, `netX` and `netY`
+
+* `$.touch.noConflict(): boolean`: Can be used for conflict resolution of jQMultiTouch's `$.touch` environment
+
+The `TouchHistory` object defines the following functions:
+
+* `size(): int`: Can be called to read the size of the history
+
+* `get(index): touchEvent`: Can be called to get the `touchEvent` at the specified `index` in the history
+
+* `find(template): int`: Can be called to find the first touch event in the history that matches the criteria specified in template; returns -1 if not found.
+
+* `first(): touchEvent`: Can be called to get the first `touchEvent` from the history.
+
+* `last(): touchEvent`: Can be called to get the last `touchEvent` from the history.
+
+* `start(template): TouchHistory`: Can be called to segment the touch history setting the start to the first `touchEvent` that matches the `template`.
+
+* `stop(template): TouchHistory`:  Can be called to segment the touch history setting the end to the last `touchEvent` that matches the `template`.
+
+* `match(t): boolean`: Compares the current touch history against the given predicates and returns true if all criteria are matched. The history will first be filtered according to the predicates as supported by `$.touch.historyFilterPredicates` (also see `TouchHistory.filter`) and then compared using the predicates defined in `$.touch.historyMatchPredicates`.
+
+Note that the parameter `t` can be a single `template` or multiple; multiple means that all templates will need to be matched.
+
+* `filter(t): TouchHistory`: Filters the current touch history by the given predicates and returns the result in the form of a new touch history. Supported predicates are registered in `$.touch.historyFilterPredicates` and can support single or multiple values -- multiple usually means that it is sufficient if one of the values matches.
+
+Note that the parameter `t` can be a single `template` or multiple; multiple means that all templates will be applied as a filter.
+
+* `query(select): TouchHistory`: Can be called to constrain the history according to a set of templates for segmentation, filter and match functions, where `select` defines the following properties:
+
+    * `select.start = template`
+    * `select.stop = template`
+    * `select.filter = template`
+    * `select.match = template`
+
+* `each(function): TouchHistory`: Can be called to iterate over the history calling `function(touchEvent)` for each touch event.
+
+* `empty(): TouchHistory`: Can be called to clear all touch events from the history by setting the size to `0`.
+
+**Note that most methods of the `TouchHistory` object can be chained as they return a new `TouchHistory` object (i.e. `start`, `stop`,  `filter`, `query`, `each`, `empty`).**
+
+See [jQMultiTouch core](js/jquery.multitouch.js) for details.
 
 ### Attachable Multi-touch Behaviours
 
@@ -198,64 +308,6 @@ $.touch.ready(function() {
 
 See the [Gestures Demo](examples/gestures.html) for an example.
 
-### Other Features
-
-jQMultiTouch's core defines the `$.touch` environment and with it the following features and options:
-
-* `$.touch.preventDefault = true/false`: Can be used to enable default browser behaviour (default is true, i.e. to prevent default behaviour)
-
-* `$.touch.triggerMouseEvents = true/false`: Can be set to true to simulate touch events, e.g. for legacy support and testing on non-touch devices (default is false, i.e. to only react to touch events)
-
-* `$.touch.enabled(): true/false`: Can be used to check whether touch is available on the device
-
-* `$.touch.ready(function): true/false`: Can be used to register a `ready` function that will be executed when the document is ready, provided that touch is available (see `$.touch.enabled()`) or `$.touch.triggerMouseEvents` is set to `true`
-
-* `$.fn.touches`: Returns true if more than one touch was registered on the DOM element, e.g.
-```javascript
-if ($(element).touches().length > 1) {
-    // more than one finger is touching the element
-}
-```
-
-* `$.touch.allTouches = {}`: Keeps a record of all active touches, e.g.
-```javascript
-$.each($.touch.allTouches, function() {
-    // log all elements that are currently being touched
-    console.log(this.target);
-});
-```
-
-Note that a touch event `e` is defined as follows:
-
-```javascript
-var e = {
-    // touch object that triggered the event
-    touch: touch,
-    // target element of touch event
-    target: touch.target,
-    // x position of touch point within document
-    clientX: touch.clientX,
-    // y position of touch point within document
-    clientY: touch.clientY,
-    // type of touch event
-    type: touchdown|touchmove|touchup|gesture,
-    // timestamp when event was triggered
-    time: $.now(),
-}
-```
-
-* `$.touch.history = new TouchHistory([])`: Keeps a record of the entire touch history, can be useful for global analysis
-
-* `$.touch.historyMaxSize = 64`: Sets the maximum size of the touch event buffer (default is 64)
-
-* `$.touch.historyFilterPredicates = {}`: Defines the predicates that can be used in `TouchHistory.filter()` and `TouchHistory.find()`, e.g. `type`, `target`, `touch`, `finger` and `time`
-
-* `$.touch.historyMatchPredicates = {}`: Defines the predicates that can be used in `TouchHistory.match()`, e.g. `clientX`, `clientY`, `deltaX`, `deltaY`, `netX` and `netY`
-
-* `$.touch.noConflict(): true/false`: Can be used for conflict resolution of jQMultiTouch's `$.touch` environment
-
-See [jQMultiTouch Core](js/jquery.multitouch.js) for details.
-
 ## Examples
 
 **The following applications are simple examples that demonstrate the general use of the framework. They have been designed to illustrate the basic concepts of the framework and how they could be applied in applications.**
@@ -285,9 +337,3 @@ See [jQMultiTouch Core](js/jquery.multitouch.js) for details.
 **Q: Why doesn't it work on my touch device?**
 
 *A: We know that compatibility with some devices is still a problem (e.g. Windows Phone and Windows 8 touch devices are not yet supported), and are working on fixing the issues.*
-
-## About
-
-jQMultiTouch was originally created by [Michael Nebeling](http://www.michael-nebeling.de) in the [Global Information Systems Group](http://www.globis.ethz.ch) at ETH Zurich. It also contains contributions from Saiganesh Swaminathan, Maximilian Speicher, Martin Grubinger, Maria Husmann and Yassin Hassan. It is available as free open-source software distributed under the GPLv3 license.
-
-Should you have any questions or comments, please feel free to [send an email to Michael Nebeling](mailto:michael.nebeling@gmail.com).
