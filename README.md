@@ -30,16 +30,16 @@ jQMultiTouch needs to be included using the following statements:
 <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 
 <!-- include jQMultiTouch core (required) -->
-<script src="../js/jquery.multitouch.js" type="text/javascript"></script>
+<script src="js/jquery.multitouch.js" type="text/javascript"></script>
 
 <!-- include jQMultiTouch attachable behaviours (optional) -->
-<script src="../js/jquery.multitouch-draggable.js" type="text/javascript"></script>
-<script src="../js/jquery.multitouch-scalable.js" type="text/javascript"></script>
-<script src="../js/jquery.multitouch-resizable.js" type="text/javascript"></script>
-<script src="../js/jquery.multitouch-rotatable.js" type="text/javascript"></script>
+<script src="js/jquery.multitouch-draggable.js" type="text/javascript"></script>
+<script src="js/jquery.multitouch-scalable.js" type="text/javascript"></script>
+<script src="js/jquery.multitouch-resizable.js" type="text/javascript"></script>
+<script src="js/jquery.multitouch-rotatable.js" type="text/javascript"></script>
 
 <!-- include jQMultiTouch stylesheet (optional) -->
-<link href="../css/jquery.multitouch.css" rel="stylesheet" type="text/css">
+<link href="css/jquery.multitouch.css" rel="stylesheet" type="text/css">
 ```
 
 jQMultiTouch requires jQuery (compatible with versions 1.6.4 or higher) and the core (`js/jquery.multitouch.js`) to be included in the document. The attachable behaviours and the stylesheet are optional.
@@ -86,6 +86,24 @@ $.each($.touch.allTouches, function() {
 });
 ```
 
+* `$.touch.history: TouchHistory`: Maintains the global touch event buffer or history
+
+* `$.touch.historyMaxSize: int = 64`: Sets the maximum size of the touch event buffer (default is 64)
+
+* `$.touch.historyFilterPredicates: object`: Defines the predicates that can be used in `TouchHistory.filter()` and `TouchHistory.find()`, e.g. `type`, `target`, `touch`, `finger` and `time`
+
+* `$.touch.historyMatchPredicates: object`: Defines the predicates that can be used in `TouchHistory.match()`, e.g. `clientX`, `clientY`, `deltaX`, `deltaY`, `netX` and `netY`
+
+* `$.touch.noConflict(): boolean`: Can be used for conflict resolution of jQMultiTouch's `$.touch` environment
+
+The `TouchHistory` object defines the following functions:
+
+* `size(): int`: Can be called to read the size of the history
+
+* `find(template): int`: Can be called to find the first touch event in the history that matches the criteria specified in template; returns -1 if not found.
+
+* `get(index): touchEvent`: Can be called to get the `touchEvent` at the specified `index` in the history
+
 Note that a touch event `touchEvent` is defined as follows:
 
 ```javascript
@@ -104,25 +122,6 @@ var touchEvent = {
     time: $.now(),
 }
 ```
-
-* `$.touch.history: TouchHistory`: Maintains the global touch event buffer or history
-
-* `$.touch.historyMaxSize: int = 64`: Sets the maximum size of the touch event buffer (default is 64)
-
-* `$.touch.historyFilterPredicates: object`: Defines the predicates that can be used in `TouchHistory.filter()` and `TouchHistory.find()`, e.g. `type`, `target`, `touch`, `finger` and `time`
-
-* `$.touch.historyMatchPredicates: object`: Defines the predicates that can be used in `TouchHistory.match()`, e.g. `clientX`, `clientY`, `deltaX`, `deltaY`, `netX` and `netY`
-
-* `$.touch.noConflict(): boolean`: Can be used for conflict resolution of jQMultiTouch's `$.touch` environment
-
-The `TouchHistory` object defines the following functions:
-
-* `size(): int`: Can be called to read the size of the history
-
-* `get(index): touchEvent`: Can be called to get the `touchEvent` at the specified `index` in the history
-
-* `find(template): int`: Can be called to find the first touch event in the history that matches the criteria specified in template; returns -1 if not found.
-
 * `first(): touchEvent`: Can be called to get the first `touchEvent` from the history.
 
 * `last(): touchEvent`: Can be called to get the last `touchEvent` from the history.
