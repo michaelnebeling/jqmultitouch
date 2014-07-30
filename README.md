@@ -131,7 +131,7 @@ var touchEvent = {
     * `template.type: touchEventType|array of touchEventType`: Constrains history to a single type or set of `touchdown`|`touchmove`|`touchup` events.
     * `template.target: documentElement|array of documentElement`: Constrains history to one or more DOM elements.
     * `template.touch: touch`: Constrains history to specified touch object, e.g. `$.touch.allTouches[0]` for the first touch object.
-    * `template.finger: int|string`: Constrains history to touch events indexed within the specified range, e.g. `0` for the first finger that is touching the screen or '0..2' for the first three fingers.
+    * `template.finger: int|string`: Constrains history to touch events indexed within the specified range, e.g. `0` for the first finger that is touching the screen or `0..2` for the first three fingers.
     * `template.time: string`: Constrains history to a specified time window, e.g. `1..100` or `<=100` for a 100ms.
     * `template.clientX|clientY: string`: Returns true if every touch in the history is within the position constraints, e.g. `>550` or `100..150` for all touch points with coordinates greater than `550px` or between `100px` and `150px`
     * `template.deltaX|deltaY: string`: Returns true if the difference between the positions of the first and last touch event in the history is within the specified delta, e.g. `>100` or `+-10` for all touch points that have moved at least `100px` right/down and by `10px` left/right or up/down, respectively.
@@ -187,18 +187,18 @@ The `touchable` behaviour and its defaults are defined as follows:
 
 ```javascript
 $.touch.touchable = {
-    // callback when a new touch is registered, return true to contiue, false to cancel
-    touchDown: function(e, touchHistory) { return true },
-    // callback when touch is moving, return true to contiue, false to cancel
-    touchMove: function(e, touchHistory) {return true },
-    // callback when touch is released, return true to contiue, false to cancel
-    touchUp: function(e, touchHistory) {return true },
+    // callback when a new touch is registered, return false to cancel default handler
+    touchDown: function(touchEvent, touchHistory): boolean = function() { return true },
+    // callback when touch is moving, return false to cancel default handler
+    touchMove: function(touchEvent, touchHistory): boolean = function() { return true },
+    // callback when touch is released, return false to cancel default handler
+    touchUp: function(touchEvent, touchHistory): boolean = function() { return true },
     // custom gesture callback
-    gesture: function(e, touchHistory) { return false },
-    // register gesture templates
-    gestureCallbacks: [],
+    gesture: function(touchEvent, touchHistory): boolean = function() { return false },
+    // register gesture template callbacks
+    gestureCallbacks: array of { template: template, callback: function } = [],
     // default touchable handler, override for custom touchable behaviour
-    touchableHandler: function(e, touchHistory) { },
+    touchableHandler: function(touchEvent, touchHistory),
 }
 ```
 
@@ -213,17 +213,17 @@ The `draggable` behaviour and its defaults are defined as follows:
 ```javascript
 $.touch.draggable: {
     // perform dragging according to x/y grid by flooring target coordinates
-    grid: [1, 1],			
+    grid: [int, int] = [1, 1],			
     // set to true to constrain drag operation to parent
-    constrainParent: false,
-    // before dragging callback, return true to contiue, false to cancel
-    dragBefore: function(e) { return true },
-    // during dragging callback, return true to contiue, false to cancel
-    dragDuring: function(e) { return true },
-    // after dragging callback, return true to contiue, false to cancel
-    dragAfter: function(e) { return true },
+    constrainParent: boolean = false,
+    // before dragging callback, return false to cancel default handler
+    dragBefore: function(touchEvent): boolean = function() { return true },
+    // during dragging callback, return false to cancel default handler
+    dragDuring: function(touchEvent): boolean = function() { return true },
+    // after dragging callback, return false to cancel default handler
+    dragAfter: function(touchEvent): boolean = function() { return true },
     // default draggable handler, override for custom dragging behaviour
-    draggableHandler: function(e, touchHistory) { ... }
+    draggableHandler: function(touchEvent, touchHistory)
 }
 ```
 
@@ -233,12 +233,12 @@ The `scalable` behaviour and its defaults are defined as follows:
 
 ```javascript
 $.touch.scalable: {
-    minScale: false,
-    maxScale: false,
-    scaleBefore: function(e) {},
-    scaleDuring: function(e) {},
-    scaleAfter: function(e) {},
-    scalableHandler: function(e, touchHistory) { ... },
+    minScale: int = false,
+    maxScale: int = false,
+    scaleBefore: function(touchEvent): boolean = function() { return true },
+    scaleDuring: function(touchEvent): boolean = function() { return true },
+    scaleAfter: function(touchEvent): boolean = function() { return true },
+    scalableHandler: function(touchEvent, touchHistory),
 }
 ```
 
@@ -248,14 +248,14 @@ The `resizable` behaviour and its defaults are defined as follows:
 
 ```javascript
 $.touch.resizable: {
-    minWidth: false,
-    maxWidth: false,
-    minHeight: false,
-    maxHeight: false,
-    resizeBefore: function(e) {},
-    resizeDuring: function(e) {},
-    resizeAfter: function(e) {},
-    resizableHandler: function(touchEvent, touchHistory) { ... },
+    minWidth: int = false,
+    maxWidth: int = false,
+    minHeight: int = false,
+    maxHeight: int = false,
+    resizeBefore: function(touchEvent): boolean = function() { return true },
+    resizeDuring: function(touchEvent): boolean = function() { return true },
+    resizeAfter: function(touchEvent): boolean = function() { return true },
+    resizableHandler: function(touchEvent, touchHistory),
 }
 ```
 
@@ -265,28 +265,34 @@ The `rotatable` behaviour and its defaults are defined as follows:
 
 ```javascript
 $.touch.rotatable: {
-    step: 1, // TODO: not implemented yet
-    rotateBefore: function(e) { return true },
-    rotateDuring: function(e) { return true },
-    rotateAfter: function(e) { return true },
-    rotatableHandler: function(touchEvent, touchHistory) {
+    step: int = 1, // TODO: not implemented yet
+    rotateBefore: function(touchEvent): boolean = function() { return true },
+    rotateDuring: function(touchEvent): boolean = function() { return true },
+    rotateAfter: function(touchEvent): boolean = function() { return true },
+    rotatableHandler: function(touchEvent, touchHistory),
 }
 ```
 
-#### Orientable Behaviour
+#### Orientation
 
-In addition, jQMultiTouch implements the [Orientable Behaviour](js/jquery.multitouch-orientable.js) a simple way to react to changes in orientation.
+In addition, jQMultiTouch implements the [Orientable Behaviour](js/jquery.multitouch-orientable.js) as a simple way to react to changes in device orientation (or window portrait/landscape mode).
 
-Example:
-```javascript
-$.touch.orientationChanged(function (orientation) {
-    if (Math.abs(orientation) === 90) {
-        alert('landscape');
-    } else if (orientation === 0) {
-        alert('portrait');
-    }
-});
-```
+The orientable behaviour and its defaults are defined as follows:
+
+* `$.touch.orientationChanged(function)`: Can be called to register a new orientation change handler, e.g.
+
+    ```javascript
+    $.touch.orientationChanged(function (orientation) {
+        if (Math.abs(orientation) === 90) {
+            alert('landscape');
+        } else if (orientation === 0) {
+            alert('portrait');
+        }
+    });
+    ```
+
+* `$.touch.orientationHandler: function`: The default orientation handler, override for custom orientation behaviour
+
 The default handler will automatically show/hide `orientable` elements marked with the following classes according to the orientation.
 
 * `.portrait`: Only visible in portrait mode
