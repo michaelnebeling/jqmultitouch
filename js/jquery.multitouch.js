@@ -230,13 +230,6 @@
                     clientY: touch.clientY,
                 };
 
-                // check for local override of preventDefault
-                var touchableParent = $(touch.target).parents('.touchable').eq(0),
-                    touchData = touchableParent.length === 1 ? touchableParent.data('touch') : false;
-                if (touchData && touchData.preventDefault !== undefined) {
-                    preventDefault = touchData.preventDefault;
-                }
-
                 // trigger touch event
                 $(touch.target).trigger(touchEvent, [$.touch.history.filter({
                     touch: touch
@@ -258,6 +251,13 @@
                 if (touchEventType == 'touchup') {
                     delete $.touch.allTouches[touchId];
                 }
+
+                // check for local override of global preventDefault
+                var touchableParent = $(touch.target).parents('.touchable').eq(0),
+                    touchData = touchableParent.length === 1 ? touchableParent.data('touch') : false;
+                if (touchData && touchData.preventDefault !== undefined) {
+                    preventDefault = touchData.preventDefault;
+                }
             });
 
             if (preventDefault) {
@@ -268,7 +268,7 @@
                 }
             }
         },
-        /** preventDefault can be set to true to globally disable default browser behaviour for touch events */
+        /** preventDefault is by default true to globally prevent default browser behaviour for touch events, but can be globally set to false and overriden locally */
         preventDefault: true,
         /** triggerMouseEvents can be set to true to simulate touch events, e.g. for testing on non-touch devices */
         triggerMouseEvents: false,
@@ -392,13 +392,6 @@
         return predicate == value;
     };
 
-    // old jQMultiTouch
-    $.touches = $.touch.allTouches;
-    $.touchHistory = $.touch.history;
-    $.touchEventMap = $.touch.eventMap;
-    $.touchPreventDefault = $.touch.preventDefault;
-    $.touchEventHandler = $.touch.eventHandler;
-
     $.fn.touches = function () {
         var $this = $(this),
             touches = [];
@@ -418,8 +411,8 @@
 
     // install touchable behaviour
     $.touch.touchable = {
-        // locally enable/disable default browser behaviour
-        preventDefault: true,
+        // can be set to locally prevent default browser behaviour
+        preventDefault: undefined,
         touchDown: function (touchEvent, touchHistory) {
             return true
         },

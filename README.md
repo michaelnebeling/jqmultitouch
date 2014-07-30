@@ -4,7 +4,7 @@ jQMultiTouch
 ## The jQuery of Multi-touch
 
 jQMultiTouch is a lightweight toolkit and development framework for multi-touch web interface development. Not only is it similar to jQuery in terms of the idea of providing a lightweight and general framework, but also because of the fact that it adopts many key ideas from jQuery and applies them to the framework's core concepts.
-			The main ideas behind jQMultiTouch and its core features are described [in this paper](http://www.globis.ethz.ch/publications/?action=show_abstract&pubid=346) presented at the [EICS 2012](http://eics-conference.org/2012) conference.
+The main ideas behind jQMultiTouch and its core features are described [in this paper](http://www.globis.ethz.ch/publications/?action=show_abstract&pubid=346) presented at the [EICS 2012](http://eics-conference.org/2012) conference.
 
 jQMultiTouch was originally created in the [Global Information Systems Group](http://www.globis.ethz.ch) at ETH Zurich. It is written and maintained by [Michael Nebeling](http://www.michael-nebeling.de). It also contains contributions from Saiganesh Swaminathan, Maximilian Speicher, Martin Grubinger, Maria Husmann and Yassin Hassan. It is available as free open-source software distributed under the GPLv3 license. See the file [LICENSE](LICENSE) for more information.
 
