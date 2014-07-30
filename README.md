@@ -48,13 +48,13 @@ jQMultiTouch requires jQuery (compatible with versions 1.6.4 or higher) and the 
 
 jQMultiTouch's core defines the `$.touch` environment and with it the following features and options:
 
-* `$.touch.preventDefault: boolean = true`: Can be set to globally control default browser behaviour (default is `true`, i.e. to prevent default behaviour)
+* `$.touch.preventDefault: boolean = true`: Can be set to globally control default browser behaviour (default is `true`, i.e. to prevent default behaviour).
 
-* `$.touch.triggerMouseEvents: boolean = false`: Can be set to simulate touch events, e.g. for legacy support and testing on non-touch devices (default is `false`, i.e. to only react to touch events)
+* `$.touch.triggerMouseEvents: boolean = false`: Can be set to simulate touch events, e.g. for legacy support and testing on non-touch devices (default is `false`, i.e. to only react to touch events).
 
-* `$.touch.enabled(): boolean`: Can be called to check whether touch is available on the device (returns `true`) or not (returns `false`)
+* `$.touch.enabled(): boolean`: Can be called to check whether touch is available on the device (returns `true`) or not (returns `false`).
 
-* `$.touch.ready(function): boolean`: Can be called to register a function that will be executed when the DOM is ready, provided that touch is available (see `$.touch.enabled()`) or `$.touch.triggerMouseEvents` is set to `true`
+* `$.touch.ready(function): boolean`: Can be called to register a function that will be executed when the DOM is ready, provided that touch is available (see `$.touch.enabled()`) or `$.touch.triggerMouseEvents` is set to `true`.
 
 * `$.fn.touches: array of touch`: Returns all touches for the element, e.g.
 ```javascript
@@ -331,6 +331,7 @@ See the [Gestures Demo](examples/gestures.html) for an example.
 * [Behaviours Demo](examples/behaviours.html): Shows jQMultiTouch's core `touchable` and attachable `draggable`, `scalable`, `resizable` and `rotatable` behaviours
 * [Orienation Demo](examples/orientation.html): Shows jQMultiTouch's `orientable` behaviour
 * [Gestures Demo](examples/gestures.html): Shows jQMultiTouch's custom `gesture`, `touchDown` and `touchUp` events of the `touchable` behaviour
+* [Scrollable Demo](examples/scrollable.html): Shows how default browser behaviour can be controlled globally using `$.touch.preventDefault` and locally using `$.fn.touchable.preventDefault`
 * [$1 Demo](examples/dollar.html): Demonstrates the integration with [$1 Unistroke Recognizer](http://depts.washington.edu/aimgroup/proj/dollar) and jQMultiTouch for stroke-based gesture recognition
 * [Simple Line Drawing Application](examples/draw.html): Simple application for drawing on a HTML5 canvas using one or more fingers, shows custom touch event handlers
 * [Picture Viewing Application](examples/pictures.html): Simple picture viewing application, shows jQMultiTouch's support for attachable behaviours for dragging, scaling and rotating elements
