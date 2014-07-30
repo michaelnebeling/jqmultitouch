@@ -109,15 +109,15 @@ Note that a touch event `touchEvent` is defined as follows:
 ```javascript
 var touchEvent = {
     // touch object that triggered the event
-    touch: touchObject,
+    touch: touch,
     // target element of touch event
     target: documentElement,
     // x position of touch point within document
     clientX: int,
     // y position of touch point within document
     clientY: int,
-    // type of touch event
-    type: touchdown|touchmove|touchup|gesture,
+    // type of touch event: 'touchdown'|'touchmove'|'touchup'|'gesture'
+    type: touchEventType,
     // timestamp when event was triggered
     time: $.now(),
 }
@@ -126,24 +126,29 @@ var touchEvent = {
 
 * `last(): touchEvent`: Can be called to get the last `touchEvent` from the history.
 
-* `start(template): TouchHistory`: Can be called to segment the touch history setting the start to the first `touchEvent` that matches the `template`.
+* `start(template): TouchHistory`: Can be called to set the start of the history to the first `touchEvent` that matches the `template`, where `template` defines the following properties:
 
-* `stop(template): TouchHistory`:  Can be called to segment the touch history setting the end to the last `touchEvent` that matches the `template`.
+    * `template.type: touchEventType|array of touchEventType`: Constrains history to a single type or set of `touchdown`|`touchmove`|`touchup` events.
+    * `template.target: documentElement|array of documentElement`: Constrains history to one or more DOM elements.
+    * `template.touch: touch`: Constrains history to specified touch object, e.g. `$.touch.allTouches[0]` for the first touch object.
+    * `template.finger: int|string`: Constrains history to touch events indexed within the specified range, e.g. `0` for the first finger that is touching the screen or '0..2' for the first three fingers.
+    * `template.time: string`: Constrains history to a specified time window, e.g. `1..100` or `<=100` for a 100ms.
+    * `template.clientX|clientY: string`: Returns true if every touch in the history is within the position constraints, e.g. `>550` or `100..150` for all touch points with coordinates greater than `550px` or between `100px` and `150px`
+    * `template.deltaX|deltaY: string`: Returns true if the difference between the positions of the first and last touch event in the history is within the specified delta, e.g. `>100` or `+-10` for all touch points that have moved at least `100px` right/down and by `10px` left/right or up/down, respectively.
+    * `template.netX|netY: string`: Returns true if the touch point has moved by the specified distance accumulated over the series of touch events in the history, e.g. `>100` for at least 100 pixels to the right
 
-* `match(t): boolean`: Compares the current touch history against the given predicates and returns true if all criteria are matched. The history will first be filtered according to the predicates as supported by `$.touch.historyFilterPredicates` (also see `TouchHistory.filter`) and then compared using the predicates defined in `$.touch.historyMatchPredicates`.
+* `stop(template): TouchHistory`:  Can be called to set the end of the history to the last `touchEvent` that matches the `template`.
 
-Note that the parameter `t` can be a single `template` or multiple; multiple means that all templates will need to be matched.
+* `match(t): boolean`: Can be called to compare the history against the specified `template` and returns true if all criteria are matched. The history will first be filtered according to `$.touch.historyFilterPredicates` (also see `TouchHistory.filter`) and then evaluated using the `$.touch.historyMatchPredicates`. Note that the parameter `t` can be a single `template` or an `array` of templates in which case all templates are required to match.
 
-* `filter(t): TouchHistory`: Filters the current touch history by the given predicates and returns the result in the form of a new touch history. Supported predicates are registered in `$.touch.historyFilterPredicates` and can support single or multiple values -- multiple usually means that it is sufficient if one of the values matches.
-
-Note that the parameter `t` can be a single `template` or multiple; multiple means that all templates will be applied as a filter.
+* `filter(t): TouchHistory`: Can be called to filter the history by the specified `template` and returns the constrained history. Supported predicates are registered in `$.touch.historyFilterPredicates` and can specify single or multiple values in which case it is sufficient that one of the values matches. Note that the parameter `t` can be a single `template` or an `array` of templates in which case all templates will be applied as a filter.
 
 * `query(select): TouchHistory`: Can be called to constrain the history according to a set of templates for segmentation, filter and match functions, where `select` defines the following properties:
 
-    * `select.start = template`
-    * `select.stop = template`
-    * `select.filter = template`
-    * `select.match = template`
+    * `select.start: template = null`
+    * `select.stop: template = null`
+    * `select.filter: template = null`
+    * `select.match: template = null`
 
 * `each(function): TouchHistory`: Can be called to iterate over the history calling `function(touchEvent)` for each touch event.
 
